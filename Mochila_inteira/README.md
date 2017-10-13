@@ -1,5 +1,4 @@
-### :shipit:Develop: 
-Kened Wanderson Cruz Olivera 
+#### :shipit:Kened Wanderson Cruz Olivera 
 # Programação Dinamica
  > é um problema de optimização combinatória. O nome dá-se devido ao modelo de uma situação em que é necessário preencher uma mochila 
  com objetos de diferentes pesos e valores. O objetivo é que se preencha a mochila com o maior valor possível, não ultrapassando o peso máximo
