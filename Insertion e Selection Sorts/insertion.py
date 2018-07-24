@@ -1,7 +1,12 @@
-import sys
+'''
+Kened Wanderson Cruz Oliveira
 
+Algoritimo de ordenação insertion sort produzido para a disciplina de APA
+'''
+
+import sys
 if len(sys.argv) != 2:
-    arq = open("num.1000.1.in","r")
+    arq = open("123.txt","r")
 else:
     arq = open(sys.argv[1],"r")
 lista = []
