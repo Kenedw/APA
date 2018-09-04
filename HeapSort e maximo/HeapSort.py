@@ -1,9 +1,8 @@
 '''
 Kened Wanderson Cruz Oliveira
 
-Algoritimo de montagem da HeapMax produzido para a disciplina de APA
+Algoritimo de ordenacao da HeapSort produzido para a disciplina de APA
 '''
-import math
 import sys
 import timeit
 
@@ -27,15 +26,24 @@ def max_heapify(heap,i):
     if(max != i):
         heap[i],heap[max] = heap[max],heap[i]
         max_heapify(heap,max)
+    return(heap)
 
 def Build_max_heap(data):
     for j in range(len(data)//2,-1,-1):
         max_heapify(data,j)
 
+def HeapSort(A):
+    Build_max_heap(A)
+    Aux = len(A) - 1
+    n = Aux
+    for i in range(n,0,-1):
+        A[0],A[i] = A[i],A[0]
+        Aux -= 1
+        A[:Aux+1] = max_heapify(A[:Aux+1],0)
 
 print("\n-------------------------Desordenada ------------------------------\n ",lista)
 Ti = timeit.default_timer()                         #medindo tempo inicial
-Build_max_heap(lista)                               #chamada do HeapMax passando o arquivo que foi aberto
+HeapSort(lista)                       #chamada do HeapSort passando o arquivo que foi aberto
 Tf = timeit.default_timer()                         #medindo tempo final
-print("Tempo total: {:f}s do HeapMax".format(Tf-Ti))
+print("Tempo total: {:f}s do HeapSort".format(Tf-Ti))
 print("\n--------------------------Ordenada ----------------------------------\n ",lista)
