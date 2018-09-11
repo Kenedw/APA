@@ -12,45 +12,53 @@ for linha in arq:
 
 print("\n-------------------------Desordenada ------------------------------\n ",lista)
 def CountingSort(data,digit):
-    aux_count = [0 for i in range(10)]               #Inicializa o auxiliar com 0
-    max_nDigit = 0                                  #tamanho maximo de digitos em um numero
-    #digit = 0                                           #posição do digito
+    aux_count = [0 for i in range(10)]              #Inicializa o auxiliar com 0
 
+    #------------------------VERIFICA RECORRENCIA-----------------------------
     for i in data:                                  #Verifica ocorrencia
         least = list(map(int,str(i)))
-        # max_nDigit = max_nDigit  if max_nDigit>len(least) else len(least)    #manter o max sempre atualizado
-        # print("i:{}".format(i))
-        least = digit < len(least) and 0 or least[digit-1]             #pega zero se não ouver outro mais significativo
+        print("i:{}".format(i))
+        # print("least:{}".format(least))
+        if(digit > len(least)):                     #pega zero se nao ouver outro mais significativo
+            least = 0
+        else:
+            least = least[digit-1]
         aux_count[least]+=1
+        print("aux_count:{}".format(aux_count))
         # print("data:{}".format(data))
-        # print("aux_count:{}".format(aux_count))
-        # print(max_nDigit)
 
+    #------------------------ORDENA OS INDICES-----------------------------
     for i in range(1,len(aux_count)):               #Ordena o indices da auxiliar
         aux_count[i] += aux_count[i-1]
 
+    #-------------POPULA A SAIDA DEACORDO COM OS INDICES---------------------
     output = [0 for i in range(len(data))]          #inicio o vetor de saia com o tamanho de data
     for i in data:                                  #passa os valores ordenados para a saida
         least = list(map(int,str(i)))
-        least = digit < len(least) and 0 or least[digit-1]             #pega zero se não ouver outro mais significativo
+        if(digit > len(least)):                     #pega zero se nao ouver outro mais significativo
+            least = 0
+        else:
+            least = least[digit-1]
         print("least:{}".format(least))
-        print("aux_count:{}".format(aux_count))
+        # print("i:{}".format(i))
+        # print("sort_aux_count:{}".format(aux_count))
+        print("output:{}".format(output))
         output[aux_count[least]-1] = i
         aux_count[least]-=1
     return output
+
 def radixSort(data,C):
     print("C:{}".format(C))
-    for digit in range(C):
+    for digit in range(C,-1,-1):
         print("digit:{}".format(digit))
-        print(data)
+        print("data:{}".format(data))
         data = CountingSort(data,digit)
+        print("----------------------------------------------------------------")
     return data
 
 
-
-
-Ti = timeit.default_timer()                         #medindo tempo inicial
+Ti = timeit.default_timer()                                             #medindo tempo inicial
 lista = radixSort(lista,len(list(map(int,str(max(lista))))))            #chamada do CountingSort passando o arquivo que foi aberto
-Tf = timeit.default_timer()                         #medindo tempo final
+Tf = timeit.default_timer()                                             #medindo tempo final
 print("Tempo total: {:f}s do RadixSort".format(Tf-Ti))
 print("\n--------------------------Ordenada ----------------------------------\n ",lista)
