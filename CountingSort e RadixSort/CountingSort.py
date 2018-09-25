@@ -33,5 +33,5 @@ def CountingSort(data,n):
 Ti = timeit.default_timer()                         #medindo tempo inicial
 lista = CountingSort(lista,max(lista,key=int)+1)                     #chamada do CountingSort passando o arquivo que foi aberto
 Tf = timeit.default_timer()                         #medindo tempo final
-print("Tempo total: {:f}s do MergeSort".format(Tf-Ti))
+print("Tempo total: {:f}s do CountingSort".format(Tf-Ti))
 # print("\n--------------------------Ordenada ----------------------------------\n ",lista)
