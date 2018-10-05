@@ -39,10 +39,11 @@ def MaxMochila(mat_nx2):
             if(mat_nx2[j][0] > w):  #se o peso do item for maior que a atual capacidade da mochila
                 mat[j][w] = mat[j-1][w]
             else:
-                if (w-mat_nx2[j][0]>0):
-                    col = w-mat_nx2[j][0]
-                else:
-                    col = 0
+                # if (w-mat_nx2[j][0]>0):
+                #     col = w-mat_nx2[j][0]
+                # else:
+                #     col = 0
+                col = [w-mat_nx2[j][0] if w-mat_nx2[j][0]>0 else 0]
                 mat[j][w] = max(mat[j-1][w] , mat[j-1][col] + mat_nx2[j][1])
     return(mat)
 
