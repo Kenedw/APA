@@ -8,45 +8,44 @@ import sys
 import numpy as np
 
 
-#se AdjacentList iqual a -1, lista de adjacencias seram buscadas no FilePath
-def heuristica_gulosa(FilePath,AdjacentList):
+#se AdjacentDict iqual a -1, dicionario de adjacencias seram buscadas no FilePath
+def heuristica_gulosa(FilePath,AdjacentDict,keys):
 
-    if(AdjacentList != -1):
-        V_E = AdjacentList
+    if(AdjacentDict != -1 or len(keys)):
+        V_E = AdjacentDict
     else:
-        V_E = CreateAdjList(FilePath)
+        V_E = CreateAdjDict(FilePath)
+        keys = V_E.keys()
 
-    color = np.zeros(max(V_E)[0]+1)
-    for i in V_E:
-        color[i[0]] = 1
-        for j in i[1:]:
-            if(color[i[0]] == color[j]):
-                color[i[0]] += 1
+    color = np.zeros(max(keys)+1) # cria o array de cores como transparente
+
+    for i in keys:
+        color[i] = 1
+        for j in V_E[i]:
+            if(color[i] == color[j]):
+                color[i] += 1
                 # print("colorindo {} ligado a {} com {}".format(i[0],j,color[i[0]]))
     # print(color)
     # print("Numero de cores {}".format(int(max(color))))
     return color
 
-#Cria uma lista de adjacencias, entrar com o diretorio do arquivo
-def CreateAdjList(arg): #monta a lista de adjacencia
-    out = []
-    before = -1
-    index = -1
+#Cria um dicionario de adjacencias, entrar com o diretorio do arquivo
+def CreateAdjDict(arg): #monta a dicionario de adjacencia
+    out = {}
     if (len(arg) != 2):
-        arq = open("instancias/DSJC250.9.col","r")
+        arq = open("instancias/DSJC125.1.col","r")
     else:
         arq = open("instancias/" + arg[1],"r")
     for j in arq:
         if(j[0] == 'e'):
             aux = map(int,j.split()[1:])
-            if(aux[0] != before):
-                out.append(aux)
-                before = aux[0]
-                index +=1
-            else:
-                out[index].append(aux[1])
+            for i in range(0,2): #para analizarmos nos dois sentidos da lista [1,2] e [2,1]
+                if(aux[i] in out): #se existir no dicionario
+                    out[aux[i]].append(aux[int(not i)]) #adicione o novo valor
+                else:
+                    out[aux[i]] = [aux[int(not i)]] #crie o novo elemento
     arq.close()
     return out
 
 if __name__ == "__main__":
-    heuristica_gulosa(sys.argv,-1)
+    heuristica_gulosa(sys.argv,-1,[])
