@@ -9,25 +9,25 @@ import numpy as np
 
 
 #se AdjacentDict iqual a -1, dicionario de adjacencias seram buscadas no FilePath
-def heuristica_gulosa(FilePath,AdjacentDict,keys):
-
-    if(AdjacentDict != -1 or len(keys)):
+def heuristica_gulosa(FilePath,AdjacentDict):
+    Sat_V_E = {}
+    if(AdjacentDict != -1):
         V_E = AdjacentDict
     else:
         V_E = CreateAdjDict(FilePath)
-        keys = V_E.keys()
 
-    color = np.zeros(max(keys)+1) # cria o array de cores como transparente
+    color = [0]*(len(V_E)+1) # cria o array de cores como transparente
+    Sat_V_E = sorted(V_E.items(), key=lambda e: len(e[1]), reverse=True)
 
-    for i in keys:
-        color[i] = 1
-        for j in V_E[i]:
-            if(color[i] == color[j]):
-                color[i] += 1
-                # print("colorindo {} ligado a {} com {}".format(i[0],j,color[i[0]]))
-    # print(color)
-    # print("Numero de cores {}".format(int(max(color))))
-    return color
+    #heuristica gulosa por saturação de vertices
+    for i in Sat_V_E:
+        color[i[0]] = 1
+        for j in V_E[i[0]]:
+            if(color[i[0]] == color[j]):
+                color[i[0]] += 1
+    del color[0]
+    return [color for _,color in sorted(zip(Sat_V_E,color))]
+
 
 #Cria um dicionario de adjacencias, entrar com o diretorio do arquivo
 def CreateAdjDict(arg): #monta a dicionario de adjacencia
@@ -48,4 +48,4 @@ def CreateAdjDict(arg): #monta a dicionario de adjacencia
     return out
 
 if __name__ == "__main__":
-    heuristica_gulosa(sys.argv,-1,[])
+    heuristica_gulosa(sys.argv,-1)

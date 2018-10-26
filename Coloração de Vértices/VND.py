@@ -8,8 +8,10 @@ def main(arg):
 
     ''' Caso inicial do construtor guloso '''
     AdjDict = CreateAdjDict(arg)
-    Mcolor = heuristica_gulosa("",AdjDict,list(AdjDict.keys()))
-    Ncolor = int(max(Mcolor))
+    Mcolor = heuristica_gulosa("",AdjDict)
+    # Mcolor = AdjDict.keys()
+    # Mcolor.insert(0,0)
+    Ncolor = len(set(Mcolor))
     print("------------------------------------------------------------------------")
     print(Mcolor)
     print("Numero de cores {}".format(Ncolor))
@@ -20,7 +22,7 @@ def main(arg):
     after = 0
     aux = Mcolor
     while(1):
-        #busca em vizinhança
+        #Busca em vizinhança
         AfterMcolor = NeighborhoodSearch(AdjDict,Mcolor)
         after = int(max(AfterMcolor))
 
@@ -41,35 +43,36 @@ def main(arg):
 #     KeyList = list(AdjDict.keys())
 #     shuffle(KeyList)    #embaralha as chaves
 #     return heuristica_gulosa("",AdjDict,KeyList)
+
 def  NeighborhoodSearch(AdjDict, MatColor):
-    Ncolors = int(max(MatColor))
+    Ncolors = len(set(MatColor))
     result = True
     bins = []
-    for i in range(1,Ncolors+1): #cria os buckers
-        index = [j for j, val in enumerate(MatColor) if val==i]
+
+    for i in range(1,Ncolors+1): #cria os buckets
+        index = [j+1 for j, val in enumerate(MatColor) if val==i]
         bins.append(index)
-    # print(bins)
-    for buck in bins: #pega bucker
-        for j in range(1,Ncolors+1): #testa todas as cores
-            print("TESTANDO COR : {}".format(j))
-            print("TESTANDO BUCKER : {}".format(buck))
-            for i in buck:  #testa todos os nó naquele bucker
-                if(j != MatColor[i]): #não testa a sua cor
+
+    ListColors = set(MatColor)
+    for buck in bins: #pega bucket
+        for j in ListColors: #testa todas as cores
+            for i in buck:  #testa todos os nó naquele bucket
+                if(j != MatColor[i-1]): #não testa a sua cor
                     indexColor = [out for out, val in enumerate(MatColor) if val==j]
-                    # print(indexColor)
-                    # print(AdjDict[i])
-                    for k in indexColor:
-                        # print(k)
+                    for k in indexColor: #indices da cor desejada
                         if(k in AdjDict[i]): #se existr um vizinho com aquela cor, não podemos pintar
                             result = False
                             break
-                    print(result)
-                    if(not result):
-                        break
+                else:
+                    result = False
+            print("cor: {} para a cor: {} - {}".format(j,MatColor[buck[0]],result))
             if(result):
                 for i in buck:
-                    MatColor[i] = j
-                # print(MatColor)
+                    print("{} = {}".format(MatColor[i-1],j))
+                    MatColor[i-1] = j
+                    del ListColors[ListColors.index()]
+
+            # print(MatColor)
     return MatColor
 
 if __name__ == "__main__":
