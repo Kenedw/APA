@@ -37,10 +37,9 @@ def main(arg):
     aux = Mcolor
     while(1):
         #Busca em vizinhança
-        bins = CreateBucketList(Mcolor)
         AfterMcolor = NeighborhoodSearch(AdjDict,Mcolor)
         after = len(set(AfterMcolor))
-
+        # print("after:{}".format(after))
         #VND
         if(after >= before):
             break
@@ -62,54 +61,62 @@ def main(arg):
 def  NeighborhoodSearch(AdjDict, MatColor):
     result = True
     indexSelectColor = 0
-    bins = CreateBucketList(MatColor)
+    ListOfreallocation = []
+
+    bins = List2Bucket(MatColor)
     ListColors = set(MatColor)
     ListColors = list(ListColors)
 
-    # print(ListColors)
-    # print(bins)
+    print("IN-LISTCOLORS\n{}".format(MatColor))
 
     #VND
     for buck in bins: #pega bucket
         for ItemColor in ListColors: #testa todas as cores
-            indexColor = bins[list(ListColors).index(ItemColor)] #lista de nó da cor desejada
+            indexColor = bins[ListColors.index(ItemColor)] #lista de nó da cor desejada
             if(buck != indexColor): #não testa a sua cor
                 result=True
                 for i in buck:  #testa todos os nó naquele bucket
+                    ListOfreallocation = []
                     for k in indexColor: #indices da cor desejada
-                        if(k in AdjDict[i]): #se existr um vizinho com aquela cor, não podemos pintar
+                        if(k not in AdjDict[i]): #se não existr um vizinho com aquela cor, podemos pintar
+                            ListOfreallocation.append([k,i])
+                        else:
                             result = False
                             break
-                        indexSelectColor = k
+                    if(not result):
+                        break
                 if(result):
-                    for i in buck:
-                        bins[indexColor.index(indexSelectColor)].append(i)
+                    for i in ListOfreallocation:
+                        bins[ListColors.index(i[0])].append(i[1])
                     del bins[bins.index(buck)]
+                    del ListColors[ListColors.index(ItemColor)]
                     break
-            else:
-                break
 
     #DEBUG
     print("COLOR BUCKETS")
     for i in zip(ListColors,bins):
         print(i)
 
-    #CreateMatColor
-    colorLen = 0
-    for i in bins:
-        colorLen+=len(i)
-    MatColor = [0]*colorLen
-    for i in bins:
-        for j in i:
-            MatColor[j] = i[0]
+    MatColor = Bucket2List(bins)
+    print("OUT-LISTCOLORS\n{}\n\n".format(MatColor))
     return MatColor
 
-def CreateBucketList(MatColor):
+def List2Bucket(MatColor):
     bins = []
     for i in set(MatColor): #cria os buckets
         index = [j for j, val in enumerate(MatColor) if val==i]
         bins.append(index)
     return(bins)
+
+def Bucket2List(bins):
+    count = 0
+    for i in bins:
+        count+=len(i)
+    MatColor = [0]*count
+    for i in range(len(bins)):
+        for j in bins[i]:
+            MatColor[j-1] = i
+    return(MatColor)
 
 
 if __name__ == "__main__":

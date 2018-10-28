@@ -7,34 +7,21 @@ Em 1976, Welsh e Powell propuseram o algoritmo LF (Large First), que analisa os 
 import sys
 import numpy as np
 
-graph_dict1 = {}
-
-graph_dict1[0] = [1,4]
-graph_dict1[1] = [0,2,4]
-graph_dict1[2] = [1]
-graph_dict1[3] = [4,5,6]
-graph_dict1[4] = [0,1,3]
-graph_dict1[5] = [3,6]
-graph_dict1[6] = [3,5,7]
-graph_dict1[7] = [6]
-
 #se AdjacentDict iqual a -1, dicionario de adjacencias seram buscadas no FilePath
 def heuristica_gulosa(FilePath,AdjacentDict):
     Sat_V_E = {}
     if(AdjacentDict != -1):
         V_E = AdjacentDict
     else:
-        # V_E = CreateAdjDict(FilePath)
-        V_E = graph_dict1
+        V_E = CreateAdjDict(FilePath)
 
-    color = [0]*(len(V_E)+1) # cria o array de cores como transparente
+    color = [0]*(len(V_E)+1) # cria o array de cores transparentes
     Sat_V_E = sorted(V_E.items(), key=lambda e: len(e[1]), reverse=True)
     #heuristica gulosa por saturação de vertices
     blocklist = []
     for i in Sat_V_E:
         if(i[0] not in blocklist):
             color[i[0]] = color[i[0]] + 1
-            # print(i[0])
             blocklist.append(i[0])
             for j in V_E[i[0]]:
                 if(j not in blocklist):
