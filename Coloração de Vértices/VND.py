@@ -23,7 +23,6 @@ def main(arg):
     AdjDict = graph_dict1
     # AdjDict = CreateAdjDict(arg)
     Mcolor = heuristica_gulosa("",AdjDict)
-    # Mcolor = heuristica_gulosa("",graph_dict1)
     # Mcolor = AdjDict.keys()
     Ncolor = len(set(Mcolor))
     print("------------------------------------------------------------------------")
@@ -39,57 +38,51 @@ def main(arg):
         #Busca em vizinhança
         AfterMcolor = NeighborhoodSearch(AdjDict,Mcolor)
         after = len(set(AfterMcolor))
-        # print("after:{}".format(after))
+
         #VND
         if(after >= before):
             break
         else:
             after,before = before,after
-            aux = AfterMcolor
+            Mcolor = AfterMcolor
 
     print("------------------------------------------------------------------------")
-    print(aux)
+    print(Mcolor)
     print("Novo numero de cores {}".format(before))
     print("------------------------------------------------------------------------")
 
-'''Shack'''
-# def  NeighborhoodSearch(AdjDict):
-#     KeyList = list(AdjDict.keys())
-#     shuffle(KeyList)    #embaralha as chaves
-#     return heuristica_gulosa("",AdjDict,KeyList)
-
 def  NeighborhoodSearch(AdjDict, MatColor):
-    result = True
-    indexSelectColor = 0
+    # result = True
+    # indexSelectColor = 0
     ListOfreallocation = []
-
     bins = List2Bucket(MatColor)
     ListColors = set(MatColor)
     ListColors = list(ListColors)
 
-    print("IN-LISTCOLORS\n{}".format(MatColor))
+    print("\n\nIN-LISTCOLORS\n{}".format(MatColor))
 
     #VND
-    for buck in bins: #pega bucket
-        for ItemColor in ListColors: #testa todas as cores
-            indexColor = bins[ListColors.index(ItemColor)] #lista de nó da cor desejada
-            if(buck != indexColor): #não testa a sua cor
+    for index,buck in enumerate(bins): #pega bucket
+        for ItemColor in range(0,len(ListColors)): #testa todas as cores
+            indexColor = bins[ItemColor] #lista de nó da cor desejada
+            if(index != ItemColor): #não testa a sua cor
+                ListOfreallocation = []
                 result=True
                 for i in buck:  #testa todos os nó naquele bucket
-                    ListOfreallocation = []
-                    for k in indexColor: #indices da cor desejada
-                        if(k not in AdjDict[i]): #se não existr um vizinho com aquela cor, podemos pintar
-                            ListOfreallocation.append([k,i])
-                        else:
+                    for k in AdjDict[i]:
+                        # print("------\n no:{} with AdjDict:{}\nneighborhood:{} in {} is {}".format(i,AdjDict[i],k,indexColor,k in indexColor))
+                        if(k in indexColor): #seleciona o nó se não ouver vizinho da mesma cor
                             result = False
                             break
-                    if(not result):
+                    if(result):
+                        ListOfreallocation.append([ItemColor,i])
+                    else:
                         break
                 if(result):
                     for i in ListOfreallocation:
-                        bins[ListColors.index(i[0])].append(i[1])
-                    del bins[bins.index(buck)]
-                    del ListColors[ListColors.index(ItemColor)]
+                        bins[i[0]].append(i[1])
+                    del bins[index]
+                    del ListColors[0]
                     break
 
     #DEBUG
@@ -112,10 +105,10 @@ def Bucket2List(bins):
     count = 0
     for i in bins:
         count+=len(i)
-    MatColor = [0]*count
-    for i in range(len(bins)):
-        for j in bins[i]:
-            MatColor[j-1] = i
+    MatColor = [-1]*count
+    for index, i in enumerate(bins):
+        for j in i:
+            MatColor[j] = index
     return(MatColor)
 
 

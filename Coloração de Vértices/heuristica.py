@@ -1,37 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 '''
-Em 1976, Welsh e Powell propuseram o algoritmo LF (Large First), que analisa os vértices em ordem decrescente de seus graus
+Em 1976, Welsh e Powell propuseram o algoritmo LF (Large First), que analisa os
+vértices em ordem decrescente de seus graus
 [Garey e Johnson 1976].
 '''
+
 import sys
 import numpy as np
 
-#se AdjacentDict iqual a -1, dicionario de adjacencias seram buscadas no FilePath
+'''
+heuristica gulosa, ao qual consome os vertices por quantidade de vizinhos de
+forma decrescente, verifica se um dos nó que deseja colorir tem a mesm coloração
+se não tiver, aquele nó podera ser colorido.
+'''
 def heuristica_gulosa(FilePath,AdjacentDict):
+    #se AdjacentDict == -1, dicionario de adjacencias = FilePath
     Sat_V_E = {}
     if(AdjacentDict != -1):
         V_E = AdjacentDict
     else:
         V_E = CreateAdjDict(FilePath)
 
-    color = [0]*(len(V_E)+1) # cria o array de cores transparentes
+    color = [-1]*(len(V_E)) # cria o array de cores transparentes
     Sat_V_E = sorted(V_E.items(), key=lambda e: len(e[1]), reverse=True)
     #heuristica gulosa por saturação de vertices
-    blocklist = []
     for i in Sat_V_E:
-        if(i[0] not in blocklist):
-            color[i[0]] = color[i[0]] + 1
-            blocklist.append(i[0])
-            for j in V_E[i[0]]:
-                if(j not in blocklist):
-                    color[j] = color[i[0]]
-    # del color[0]
-    return [color for _,color in sorted(zip(Sat_V_E,color))]
+        for j in range(0,len(V_E)+1):
+            if(len([k for k in i[1] if color[k]==j]) == 0):
+                # print("colorindo o {} com {}".format(i[0],j))
+                color[i[0]] = j
+                break
+    return(color)
 
 
-#Cria um dicionario de adjacencias, entrar com o diretorio do arquivo
-def CreateAdjDict(arg): #monta a dicionario de adjacencia
+'''
+Cria uma lista de adjacencias do tipo dicionario
+"nó : [vizinhos]"
+'''
+def CreateAdjDict(arg):
     out = {}
     if (len(arg) != 2):
         arq = open("instancias/DSJC125.1.col","r")
