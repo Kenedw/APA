@@ -28,9 +28,9 @@ def heuristica_gulosa(FilePath,AdjacentDict):
     #heuristica gulosa por saturação de vertices
     for i in Sat_V_E:
         for j in range(0,len(V_E)+1):
-            if(len([k for k in i[1] if color[k]==j]) == 0):
+            if(len([k for k in i[1] if color[k-1]==j]) == 0):
                 # print("colorindo o {} com {}".format(i[0],j))
-                color[i[0]] = j
+                color[i[0]-1] = j
                 break
     return(color)
 

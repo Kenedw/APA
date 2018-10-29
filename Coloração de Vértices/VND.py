@@ -60,7 +60,6 @@ def  NeighborhoodSearch(AdjDict, MatColor):
     ListColors = list(ListColors)
 
     print("\n\nIN-LISTCOLORS\n{}".format(MatColor))
-
     #VND
     for index,buck in enumerate(bins): #pega bucket
         for ItemColor in range(0,len(ListColors)): #testa todas as cores
@@ -69,15 +68,18 @@ def  NeighborhoodSearch(AdjDict, MatColor):
                 ListOfreallocation = []
                 result=True
                 for i in buck:  #testa todos os nó naquele bucket
-                    for k in AdjDict[i]:
-                        # print("------\n no:{} with AdjDict:{}\nneighborhood:{} in {} is {}".format(i,AdjDict[i],k,indexColor,k in indexColor))
-                        if(k in indexColor): #seleciona o nó se não ouver vizinho da mesma cor
-                            result = False
+                    try:
+                        for k in AdjDict[i]:
+                            # print("------\n no:{} with AdjDict:{}\nneighborhood:{} in {} is {}".format(i,AdjDict[i],k,indexColor,k in indexColor))
+                            if(k in indexColor): #seleciona o nó se não ouver vizinho da mesma cor
+                                result = False
+                                break
+                        if(result):
+                            ListOfreallocation.append([ItemColor,i])
+                        else:
                             break
-                    if(result):
-                        ListOfreallocation.append([ItemColor,i])
-                    else:
-                        break
+                    except KeyError:
+                        i=i+1
                 if(result):
                     for i in ListOfreallocation:
                         bins[i[0]].append(i[1])
